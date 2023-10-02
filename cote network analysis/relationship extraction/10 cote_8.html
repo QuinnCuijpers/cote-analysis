@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 0, "id": "Kanji Ike", "label": "Kanji Ike", "shape": "dot", "size": 8}, {"group": 1, "id": "Ken Sudou", "label": "Ken Sudou", "shape": "dot", "size": 12}, {"group": 2, "id": "Akito Miyake", "label": "Akito Miyake", "shape": "dot", "size": 14}, {"group": 0, "id": "Sae Chabashira", "label": "Sae Chabashira", "shape": "dot", "size": 5}, {"group": 0, "id": "Yousuke Hirata", "label": "Yousuke Hirata", "shape": "dot", "size": 21}, {"group": 0, "id": "Satsuki Shinohara", "label": "Satsuki Shinohara", "shape": "dot", "size": 1}, {"group": 1, "id": "Haruki Yamauchi", "label": "Haruki Yamauchi", "shape": "dot", "size": 12}, {"group": 0, "id": "Hideo Sotomura", "label": "Hideo Sotomura", "shape": "dot", "size": 2}, {"group": 1, "id": "Sou Shibata", "label": "Sou Shibata", "shape": "dot", "size": 11}, {"group": 3, "id": "Suzune Horikita", "label": "Suzune Horikita", "shape": "dot", "size": 23}, {"group": 3, "id": "Miyabi Nagumo", "label": "Miyabi Nagumo", "shape": "dot", "size": 21}, {"group": 1, "id": "Satoru Kaneda", "label": "Satoru Kaneda", "shape": "dot", "size": 8}, {"group": 1, "id": "Yahiko Totsuka", "label": "Yahiko Totsuka", "shape": "dot", "size": 13}, {"group": 1, "id": "Kouhei Katsuragi", "label": "Kouhei Katsuragi", "shape": "dot", "size": 10}, {"group": 1, "id": "Albert Yamada", "label": "Albert Yamada", "shape": "dot", "size": 12}, {"group": 1, "id": "Rokusuke Kouenji", "label": "Rokusuke Kouenji", "shape": "dot", "size": 18}, {"group": 2, "id": "Kakeru Ryuuen", "label": "Kakeru Ryuuen", "shape": "dot", "size": 20}, {"group": 1, "id": "Daichi Ishizaki", "label": "Daichi Ishizaki", "shape": "dot", "size": 19}, {"group": 1, "id": "Tomonari Mashima", "label": "Tomonari Mashima", "shape": "dot", "size": 1}, {"group": 3, "id": "Arisu Sakayanagi", "label": "Arisu Sakayanagi", "shape": "dot", "size": 16}, {"group": 2, "id": "Airi Sakura", "label": "Airi Sakura", "shape": "dot", "size": 7}, {"group": 2, "id": "Haruka Hasebe", "label": "Haruka Hasebe", "shape": "dot", "size": 7}, {"group": 2, "id": "Kiyotaka Ayanokouji", "label": "Kiyotaka Ayanokouji", "shape": "dot", "size": 15}, {"group": 2, "id": "Kei Karuizawa", "label": "Kei Karuizawa", "shape": "dot", "size": 15}, {"group": 1, "id": "Masayoshi Hashimoto", "label": "Masayoshi Hashimoto", "shape": "dot", "size": 14}, {"group": 3, "id": "Manabu Horikita", "label": "Manabu Horikita", "shape": "dot", "size": 6}, {"group": 0, "id": "Maya Satou", "label": "Maya Satou", "shape": "dot", "size": 2}, {"group": 3, "id": "Honami Ichinose", "label": "Honami Ichinose", "shape": "dot", "size": 10}, {"group": 3, "id": "Akane Tachibana", "label": "Akane Tachibana", "shape": "dot", "size": 7}, {"group": 1, "id": "Teruhiko Yukimura", "label": "Teruhiko Yukimura", "shape": "dot", "size": 8}, {"group": 3, "id": "Kikyou Kushida", "label": "Kikyou Kushida", "shape": "dot", "size": 4}, {"group": 4, "id": "Hiyori Shiina", "label": "Hiyori Shiina", "shape": "dot", "size": 7}, {"group": 3, "id": "Mio Ibuki", "label": "Mio Ibuki", "shape": "dot", "size": 1}, {"group": 3, "id": "Ikuto Kiriyama", "label": "Ikuto Kiriyama", "shape": "dot", "size": 4}, {"group": 3, "id": "Nazuna Asahina", "label": "Nazuna Asahina", "shape": "dot", "size": 4}, {"group": 3, "id": "Masumi Kamuro", "label": "Masumi Kamuro", "shape": "dot", "size": 3}, {"group": 1, "id": "Hiroya Tokitou", "label": "Hiroya Tokitou", "shape": "dot", "size": 3}, {"group": 4, "id": "Mei-Yu Wang", "label": "Mei-Yu Wang", "shape": "dot", "size": 4}, {"group": 4, "id": "Nanami Yabu", "label": "Nanami Yabu", "shape": "dot", "size": 2}, {"group": 3, "id": "Mako Amikura", "label": "Mako Amikura", "shape": "dot", "size": 1}, {"group": 4, "id": "Shiho Manabe", "label": "Shiho Manabe", "shape": "dot", "size": 2}, {"group": 4, "id": "Takeko Nishino", "label": "Takeko Nishino", "shape": "dot", "size": 3}, {"group": 4, "id": "Minori Kinoshita", "label": "Minori Kinoshita", "shape": "dot", "size": 2}]);
+                  edges = new vis.DataSet([{"from": "Kanji Ike", "to": "Ken Sudou", "value": 9, "width": 1}, {"from": "Kanji Ike", "to": "Akito Miyake", "value": 1, "width": 1}, {"from": "Kanji Ike", "to": "Sae Chabashira", "value": 91, "width": 1}, {"from": "Kanji Ike", "to": "Yousuke Hirata", "value": 52, "width": 1}, {"from": "Kanji Ike", "to": "Satsuki Shinohara", "value": 10, "width": 1}, {"from": "Kanji Ike", "to": "Haruki Yamauchi", "value": 35, "width": 1}, {"from": "Kanji Ike", "to": "Hideo Sotomura", "value": 12, "width": 1}, {"from": "Kanji Ike", "to": "Sou Shibata", "value": 12, "width": 1}, {"from": "Ken Sudou", "to": "Haruki Yamauchi", "value": 6, "width": 1}, {"from": "Ken Sudou", "to": "Suzune Horikita", "value": 4, "width": 1}, {"from": "Ken Sudou", "to": "Miyabi Nagumo", "value": 2, "width": 1}, {"from": "Ken Sudou", "to": "Sou Shibata", "value": 18, "width": 1}, {"from": "Ken Sudou", "to": "Satoru Kaneda", "value": 10, "width": 1}, {"from": "Ken Sudou", "to": "Yahiko Totsuka", "value": 1, "width": 1}, {"from": "Ken Sudou", "to": "Kouhei Katsuragi", "value": 23, "width": 1}, {"from": "Ken Sudou", "to": "Albert Yamada", "value": 12, "width": 1}, {"from": "Ken Sudou", "to": "Rokusuke Kouenji", "value": 6, "width": 1}, {"from": "Ken Sudou", "to": "Kakeru Ryuuen", "value": 5, "width": 1}, {"from": "Ken Sudou", "to": "Daichi Ishizaki", "value": 6, "width": 1}, {"from": "Haruki Yamauchi", "to": "Akito Miyake", "value": 2, "width": 1}, {"from": "Haruki Yamauchi", "to": "Suzune Horikita", "value": 3, "width": 1}, {"from": "Haruki Yamauchi", "to": "Yousuke Hirata", "value": 27, "width": 1}, {"from": "Haruki Yamauchi", "to": "Tomonari Mashima", "value": 4, "width": 1}, {"from": "Haruki Yamauchi", "to": "Arisu Sakayanagi", "value": 37, "width": 1}, {"from": "Haruki Yamauchi", "to": "Sou Shibata", "value": 50, "width": 1}, {"from": "Haruki Yamauchi", "to": "Satoru Kaneda", "value": 5, "width": 1}, {"from": "Haruki Yamauchi", "to": "Kouhei Katsuragi", "value": 5, "width": 1}, {"from": "Haruki Yamauchi", "to": "Rokusuke Kouenji", "value": 7, "width": 1}, {"from": "Haruki Yamauchi", "to": "Yahiko Totsuka", "value": 18, "width": 1}, {"from": "Akito Miyake", "to": "Suzune Horikita", "value": 9, "width": 1}, {"from": "Akito Miyake", "to": "Airi Sakura", "value": 20, "width": 1}, {"from": "Akito Miyake", "to": "Haruka Hasebe", "value": 36, "width": 1}, {"from": "Akito Miyake", "to": "Yousuke Hirata", "value": 37, "width": 1}, {"from": "Akito Miyake", "to": "Kiyotaka Ayanokouji", "value": 5, "width": 1}, {"from": "Akito Miyake", "to": "Rokusuke Kouenji", "value": 16, "width": 1}, {"from": "Akito Miyake", "to": "Kakeru Ryuuen", "value": 35, "width": 1}, {"from": "Akito Miyake", "to": "Albert Yamada", "value": 2, "width": 1}, {"from": "Akito Miyake", "to": "Miyabi Nagumo", "value": 5, "width": 1}, {"from": "Akito Miyake", "to": "Satoru Kaneda", "value": 4, "width": 1}, {"from": "Akito Miyake", "to": "Kei Karuizawa", "value": 4, "width": 1}, {"from": "Akito Miyake", "to": "Daichi Ishizaki", "value": 5, "width": 1}, {"from": "Sae Chabashira", "to": "Yousuke Hirata", "value": 61, "width": 1}, {"from": "Sae Chabashira", "to": "Suzune Horikita", "value": 15, "width": 1}, {"from": "Sae Chabashira", "to": "Rokusuke Kouenji", "value": 28, "width": 1}, {"from": "Sae Chabashira", "to": "Masayoshi Hashimoto", "value": 4, "width": 1}, {"from": "Yousuke Hirata", "to": "Haruka Hasebe", "value": 5, "width": 1}, {"from": "Yousuke Hirata", "to": "Suzune Horikita", "value": 61, "width": 1}, {"from": "Yousuke Hirata", "to": "Kei Karuizawa", "value": 30, "width": 1}, {"from": "Yousuke Hirata", "to": "Sou Shibata", "value": 39, "width": 1}, {"from": "Yousuke Hirata", "to": "Satoru Kaneda", "value": 69, "width": 1}, {"from": "Yousuke Hirata", "to": "Daichi Ishizaki", "value": 19, "width": 1}, {"from": "Yousuke Hirata", "to": "Hideo Sotomura", "value": 12, "width": 1}, {"from": "Yousuke Hirata", "to": "Kakeru Ryuuen", "value": 51, "width": 1}, {"from": "Yousuke Hirata", "to": "Rokusuke Kouenji", "value": 15, "width": 1}, {"from": "Yousuke Hirata", "to": "Manabu Horikita", "value": 10, "width": 1}, {"from": "Yousuke Hirata", "to": "Albert Yamada", "value": 4, "width": 1}, {"from": "Yousuke Hirata", "to": "Miyabi Nagumo", "value": 5, "width": 1}, {"from": "Yousuke Hirata", "to": "Maya Satou", "value": 6, "width": 1}, {"from": "Yousuke Hirata", "to": "Honami Ichinose", "value": 12, "width": 1}, {"from": "Yousuke Hirata", "to": "Akane Tachibana", "value": 11, "width": 1}, {"from": "Yousuke Hirata", "to": "Teruhiko Yukimura", "value": 18, "width": 1}, {"from": "Yousuke Hirata", "to": "Masayoshi Hashimoto", "value": 4, "width": 1}, {"from": "Suzune Horikita", "to": "Kikyou Kushida", "value": 61, "width": 1}, {"from": "Suzune Horikita", "to": "Kei Karuizawa", "value": 45, "width": 1}, {"from": "Suzune Horikita", "to": "Miyabi Nagumo", "value": 490, "width": 1}, {"from": "Suzune Horikita", "to": "Daichi Ishizaki", "value": 24, "width": 1}, {"from": "Suzune Horikita", "to": "Yahiko Totsuka", "value": 2, "width": 1}, {"from": "Suzune Horikita", "to": "Honami Ichinose", "value": 11, "width": 1}, {"from": "Suzune Horikita", "to": "Kakeru Ryuuen", "value": 34, "width": 1}, {"from": "Suzune Horikita", "to": "Hiyori Shiina", "value": 4, "width": 1}, {"from": "Suzune Horikita", "to": "Arisu Sakayanagi", "value": 27, "width": 1}, {"from": "Suzune Horikita", "to": "Manabu Horikita", "value": 1, "width": 1}, {"from": "Suzune Horikita", "to": "Mio Ibuki", "value": 18, "width": 1}, {"from": "Suzune Horikita", "to": "Rokusuke Kouenji", "value": 4, "width": 1}, {"from": "Suzune Horikita", "to": "Ikuto Kiriyama", "value": 4, "width": 1}, {"from": "Suzune Horikita", "to": "Nazuna Asahina", "value": 13, "width": 1}, {"from": "Suzune Horikita", "to": "Akane Tachibana", "value": 170, "width": 1}, {"from": "Suzune Horikita", "to": "Masayoshi Hashimoto", "value": 6, "width": 1}, {"from": "Suzune Horikita", "to": "Kiyotaka Ayanokouji", "value": 6, "width": 1}, {"from": "Suzune Horikita", "to": "Teruhiko Yukimura", "value": 4, "width": 1}, {"from": "Airi Sakura", "to": "Haruka Hasebe", "value": 101, "width": 1}, {"from": "Airi Sakura", "to": "Miyabi Nagumo", "value": 4, "width": 1}, {"from": "Airi Sakura", "to": "Rokusuke Kouenji", "value": 14, "width": 1}, {"from": "Airi Sakura", "to": "Kiyotaka Ayanokouji", "value": 22, "width": 1}, {"from": "Airi Sakura", "to": "Kakeru Ryuuen", "value": 2, "width": 1}, {"from": "Airi Sakura", "to": "Kei Karuizawa", "value": 5, "width": 1}, {"from": "Haruka Hasebe", "to": "Kakeru Ryuuen", "value": 5, "width": 1}, {"from": "Haruka Hasebe", "to": "Kiyotaka Ayanokouji", "value": 5, "width": 1}, {"from": "Haruka Hasebe", "to": "Kei Karuizawa", "value": 5, "width": 1}, {"from": "Haruka Hasebe", "to": "Daichi Ishizaki", "value": 4, "width": 1}, {"from": "Kikyou Kushida", "to": "Honami Ichinose", "value": 5, "width": 1}, {"from": "Kikyou Kushida", "to": "Arisu Sakayanagi", "value": 6, "width": 1}, {"from": "Kikyou Kushida", "to": "Kiyotaka Ayanokouji", "value": 10, "width": 1}, {"from": "Kei Karuizawa", "to": "Arisu Sakayanagi", "value": 11, "width": 1}, {"from": "Kei Karuizawa", "to": "Maya Satou", "value": 6, "width": 1}, {"from": "Kei Karuizawa", "to": "Hiyori Shiina", "value": 4, "width": 1}, {"from": "Kei Karuizawa", "to": "Kakeru Ryuuen", "value": 30, "width": 1}, {"from": "Kei Karuizawa", "to": "Masumi Kamuro", "value": 5, "width": 1}, {"from": "Kei Karuizawa", "to": "Miyabi Nagumo", "value": 28, "width": 1}, {"from": "Kei Karuizawa", "to": "Nazuna Asahina", "value": 44, "width": 1}, {"from": "Kei Karuizawa", "to": "Akane Tachibana", "value": 22, "width": 1}, {"from": "Kei Karuizawa", "to": "Kiyotaka Ayanokouji", "value": 4, "width": 1}, {"from": "Kei Karuizawa", "to": "Manabu Horikita", "value": 2, "width": 1}, {"from": "Miyabi Nagumo", "to": "Satoru Kaneda", "value": 25, "width": 1}, {"from": "Miyabi Nagumo", "to": "Daichi Ishizaki", "value": 11, "width": 1}, {"from": "Miyabi Nagumo", "to": "Rokusuke Kouenji", "value": 90, "width": 1}, {"from": "Miyabi Nagumo", "to": "Albert Yamada", "value": 4, "width": 1}, {"from": "Miyabi Nagumo", "to": "Yahiko Totsuka", "value": 14, "width": 1}, {"from": "Miyabi Nagumo", "to": "Arisu Sakayanagi", "value": 38, "width": 1}, {"from": "Miyabi Nagumo", "to": "Ikuto Kiriyama", "value": 74, "width": 1}, {"from": "Miyabi Nagumo", "to": "Manabu Horikita", "value": 69, "width": 1}, {"from": "Miyabi Nagumo", "to": "Masayoshi Hashimoto", "value": 47, "width": 1}, {"from": "Miyabi Nagumo", "to": "Kiyotaka Ayanokouji", "value": 27, "width": 1}, {"from": "Miyabi Nagumo", "to": "Kakeru Ryuuen", "value": 65, "width": 1}, {"from": "Miyabi Nagumo", "to": "Honami Ichinose", "value": 1, "width": 1}, {"from": "Miyabi Nagumo", "to": "Nazuna Asahina", "value": 135, "width": 1}, {"from": "Miyabi Nagumo", "to": "Akane Tachibana", "value": 86, "width": 1}, {"from": "Miyabi Nagumo", "to": "Teruhiko Yukimura", "value": 1, "width": 1}, {"from": "Sou Shibata", "to": "Satoru Kaneda", "value": 13, "width": 1}, {"from": "Sou Shibata", "to": "Kakeru Ryuuen", "value": 22, "width": 1}, {"from": "Sou Shibata", "to": "Daichi Ishizaki", "value": 4, "width": 1}, {"from": "Sou Shibata", "to": "Arisu Sakayanagi", "value": 4, "width": 1}, {"from": "Sou Shibata", "to": "Kouhei Katsuragi", "value": 3, "width": 1}, {"from": "Sou Shibata", "to": "Albert Yamada", "value": 5, "width": 1}, {"from": "Sou Shibata", "to": "Masayoshi Hashimoto", "value": 4, "width": 1}, {"from": "Satoru Kaneda", "to": "Kakeru Ryuuen", "value": 24, "width": 1}, {"from": "Satoru Kaneda", "to": "Daichi Ishizaki", "value": 12, "width": 1}, {"from": "Daichi Ishizaki", "to": "Kakeru Ryuuen", "value": 88, "width": 1}, {"from": "Daichi Ishizaki", "to": "Hiyori Shiina", "value": 5, "width": 1}, {"from": "Daichi Ishizaki", "to": "Hiroya Tokitou", "value": 2, "width": 1}, {"from": "Daichi Ishizaki", "to": "Albert Yamada", "value": 331, "width": 1}, {"from": "Daichi Ishizaki", "to": "Rokusuke Kouenji", "value": 216, "width": 1}, {"from": "Daichi Ishizaki", "to": "Masayoshi Hashimoto", "value": 34, "width": 1}, {"from": "Daichi Ishizaki", "to": "Yahiko Totsuka", "value": 49, "width": 1}, {"from": "Daichi Ishizaki", "to": "Kiyotaka Ayanokouji", "value": 24, "width": 1}, {"from": "Daichi Ishizaki", "to": "Arisu Sakayanagi", "value": 6, "width": 1}, {"from": "Daichi Ishizaki", "to": "Teruhiko Yukimura", "value": 33, "width": 1}, {"from": "Daichi Ishizaki", "to": "Kouhei Katsuragi", "value": 28, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Kiyotaka Ayanokouji", "value": 9, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Rokusuke Kouenji", "value": 33, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Hiyori Shiina", "value": 19, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Albert Yamada", "value": 32, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Yahiko Totsuka", "value": 13, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Honami Ichinose", "value": 1, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Arisu Sakayanagi", "value": 42, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Masayoshi Hashimoto", "value": 28, "width": 1}, {"from": "Kakeru Ryuuen", "to": "Manabu Horikita", "value": 5, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Albert Yamada", "value": 12, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Masayoshi Hashimoto", "value": 19, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Rokusuke Kouenji", "value": 20, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Kouhei Katsuragi", "value": 4, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Arisu Sakayanagi", "value": 6, "width": 1}, {"from": "Kiyotaka Ayanokouji", "to": "Akane Tachibana", "value": 11, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Hiroya Tokitou", "value": 8, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Albert Yamada", "value": 106, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Masayoshi Hashimoto", "value": 28, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Teruhiko Yukimura", "value": 24, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Ikuto Kiriyama", "value": 13, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Kouhei Katsuragi", "value": 21, "width": 1}, {"from": "Rokusuke Kouenji", "to": "Yahiko Totsuka", "value": 67, "width": 1}, {"from": "Hiyori Shiina", "to": "Honami Ichinose", "value": 41, "width": 1}, {"from": "Hiyori Shiina", "to": "Mei-Yu Wang", "value": 30, "width": 1}, {"from": "Hiyori Shiina", "to": "Nanami Yabu", "value": 12, "width": 1}, {"from": "Hiroya Tokitou", "to": "Teruhiko Yukimura", "value": 4, "width": 1}, {"from": "Albert Yamada", "to": "Masayoshi Hashimoto", "value": 21, "width": 1}, {"from": "Albert Yamada", "to": "Kouhei Katsuragi", "value": 30, "width": 1}, {"from": "Albert Yamada", "to": "Yahiko Totsuka", "value": 7, "width": 1}, {"from": "Manabu Horikita", "to": "Akane Tachibana", "value": 15, "width": 1}, {"from": "Masayoshi Hashimoto", "to": "Yahiko Totsuka", "value": 24, "width": 1}, {"from": "Masayoshi Hashimoto", "to": "Teruhiko Yukimura", "value": 10, "width": 1}, {"from": "Masayoshi Hashimoto", "to": "Kouhei Katsuragi", "value": 36, "width": 1}, {"from": "Masayoshi Hashimoto", "to": "Arisu Sakayanagi", "value": 23, "width": 1}, {"from": "Yahiko Totsuka", "to": "Ikuto Kiriyama", "value": 3, "width": 1}, {"from": "Yahiko Totsuka", "to": "Kouhei Katsuragi", "value": 111, "width": 1}, {"from": "Yahiko Totsuka", "to": "Teruhiko Yukimura", "value": 4, "width": 1}, {"from": "Yahiko Totsuka", "to": "Arisu Sakayanagi", "value": 2, "width": 1}, {"from": "Arisu Sakayanagi", "to": "Masumi Kamuro", "value": 46, "width": 1}, {"from": "Arisu Sakayanagi", "to": "Honami Ichinose", "value": 23, "width": 1}, {"from": "Arisu Sakayanagi", "to": "Kouhei Katsuragi", "value": 59, "width": 1}, {"from": "Arisu Sakayanagi", "to": "Akane Tachibana", "value": 1, "width": 1}, {"from": "Arisu Sakayanagi", "to": "Nazuna Asahina", "value": 3, "width": 1}, {"from": "Honami Ichinose", "to": "Mako Amikura", "value": 5, "width": 1}, {"from": "Honami Ichinose", "to": "Masumi Kamuro", "value": 5, "width": 1}, {"from": "Honami Ichinose", "to": "Mei-Yu Wang", "value": 5, "width": 1}, {"from": "Mei-Yu Wang", "to": "Shiho Manabe", "value": 6, "width": 1}, {"from": "Mei-Yu Wang", "to": "Takeko Nishino", "value": 4, "width": 1}, {"from": "Nanami Yabu", "to": "Minori Kinoshita", "value": 12, "width": 1}, {"from": "Minori Kinoshita", "to": "Takeko Nishino", "value": 12, "width": 1}, {"from": "Takeko Nishino", "to": "Shiho Manabe", "value": 17, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
